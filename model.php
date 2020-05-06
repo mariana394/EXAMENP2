@@ -13,52 +13,52 @@
       mysqli_close($conexion_bd);
   }
 
- function consultar_estados($idZombie=''){
+ function consultar_tipos($idLugar=''){
         $conexion_bd = conectar_bd();
         $resultado = '<td>';
-        $consulta = 'SELECT E.nombre as nombreE, T.fechaCreacion as fecha   
-        			 FROM estado as E , tiene as T 
-        			 WHERE T.id_estado =E.id and T.id_zombie ='.$idZombie.'';
+        $consulta = 'SELECT T.nombre as nombreT, Lt.fechaCreacion as fecha FROM Tipo as T , Lugar_Tipo as Lt WHERE Lt.id_lugar =T.id and Lt.id_tipo ='.$idLugar .'';
+       
         
         $resultados = $conexion_bd->query($consulta);
         while ($row = mysqli_fetch_array($resultados, MYSQLI_BOTH)) {
-          $resultado .= ''.$row ['nombreE'] .'('.$row['fecha'] .')<br>' ;
+          $resultado .= ''.$row ['nombreT'] .'('.$row['fecha'] .')<br>' ;
         }
       
        // echo $consulta;
         return $resultado;
     }
 
-   function consultar_zombies($estado=""){
+   function consultar_incidentes($tipo=""){
         $conexion_bd = conectar_bd();
        
        $resultado=
         "<table class='highlight'>
             <thead>
                 <tr>
-                    <th>Zombie</th>
-                    <th>Estados</th>
+                    <th>Lugar</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
                 </tr>
             </thead>
             <tbody>";
        
-           $consulta = 'select distinct Z.id as idZ, Z.nombre as nombreZ 
-                from zombie as Z,estado as E ,tiene as T
-                where Z.id=T.id_zombie and E.id = T.id_estado ';
+           $consulta =  'SELECT DISTINCT L.id as idL,L.nombre as nombreL FROM Lugar as L ,Lugar_Tipo as Lt, Tipo as T WHERE L.id=Lt.id_Lugar and T.id = Lt.id_Tipo' ;
        
-        if ($estado != "") {
-            $consulta .= " AND T.id_estado=".$estado;
-        }
-       $consulta .= ' order by T.fechaCreacion';
+       /* if ($tipo != "") {
+            $consulta .= " AND T.id_estado=".$tipo;
+        }*/
+       $consulta .= ' order by Lt.fechaCreacion';
        
        $resultados = $conexion_bd->query($consulta);
        
        while($row = mysqli_fetch_array( $resultados, MYSQLI_BOTH) ){
            $resultado .= '<tr>';
-           $resultado .= '<td>'.$row['nombreZ'].'</td>';
-           $resultado .= consultar_estados($row['idZ']);
-           $resultado .= '<a class="waves-effect waves-light btn" href="form_RegistrarEstado.php?id='.$row['idZ'].' " ><i class="material-icons  left">add</i>Registrar estado</a>';
+           $resultado .= '<td>'.$row['nombreL'].'</td>';
+           $resultado .= consultar_tipos($row['idL']);
+           $resultado .= '<a class="waves-effect waves-light btn" href="form_RegistrarEstado.php?id='.$row['idL'].' " ><i class="material-icons  left">add</i>Registrar estado</a>';
+
            $resultado .=' </td>
+
            </tr>';
               
        } 
@@ -69,13 +69,13 @@
    }
 
 
-    function insertar_estado($idZ,$idE) {
+    function insertar_tipoIncidente($lugar,$tipo) {
     $conexion_bd = conectar_bd();
 
     //Prepara la consulta
   
 
-    $dml = 'INSERT INTO tiene (id_zombie,id_estado) VALUES (?,?)';
+    $dml = 'INSERT INTO Lugar_Tipo (id_Lugar,id_Tipo) VALUES (?,?)';
     if ( !($statement = $conexion_bd->prepare($dml)) ) {
         die("Error: (" . $conexion_bd->errno . ") " . $conexion_bd->error);
         return 0;
@@ -83,7 +83,7 @@
 
     //Unir los parámetros de la función con los parámetros de la consulta
     //El primer argumento de bind_param es el formato de cada parámetro
-    if (!$statement->bind_param("ii", $idZ,$idE)) {
+    if (!$statement->bind_param("ii", $lugar,$tipo)) {
         die("Error en vinculación: (" . $statement->errno . ") " . $statement->error);
         return 0;
     }
@@ -99,44 +99,11 @@ desconectar_bd($conexion_bd);
 
 
 
-function insertar_zombie($nombre,$id_estado) {
+function insertar_incidente($lugar,$tipo) {
     $conexion_bd = conectar_bd();
       
-    //Prepara la consulta
-    $dml = 'INSERT INTO zombie (nombre) VALUES (?) ';
-   
-    if ( !($statement = $conexion_bd->prepare($dml)) ) {
-        die("Error: (" . $conexion_bd->errno . ") " . $conexion_bd->error);
-        return 0;
-    }
-      
-    //Unir los parámetros de la función con los parámetros de la consulta   
-    //El primer argumento de bind_param es el formato de cada parámetro
-    if (!$statement->bind_param("s",$nombre)) {
-        die("Error en vinculación: (" . $statement->errno . ") " . $statement->error);
-        return 0;
-    }
-      
-    //Executar la consulta
-    if (!$statement->execute()) {
-      die("Error en ejecución: (" . $statement->errno . ") " . $statement->error);
-        return 0;
-    }
-      
-      //seleccionar id de zombie
-   $consulta = "select id from  zombie where nombre='".$nombre ."'";
-    echo $consulta;
-    $resultados = $conexion_bd->query($consulta);
-    while ($row = mysqli_fetch_array($resultados, MYSQLI_BOTH)) {
-      $resultado = $row["id"];
-    }
-      
-      
-      echo $resultado;
-      
-      
-          //seleccionar id de zombie
-    $dml = 'INSERT INTO tiene (id_zombie ,id_estado) VALUES (?,?)';
+    
+    $dml = 'INSERT INTO Lugar_Tipo (id_Lugar ,id_Tipo) VALUES (?,?)';
  
     if ( !($statement = $conexion_bd->prepare($dml)) ) {
         die("Error: (" . $conexion_bd->errno . ") " . $conexion_bd->error);
@@ -145,7 +112,7 @@ function insertar_zombie($nombre,$id_estado) {
       
     //Unir los parámetros de la función con los parámetros de la consulta   
     //El primer argumento de bind_param es el formato de cada parámetro
-    if (!$statement->bind_param("ii",$resultado,$id_estado)) {
+    if (!$statement->bind_param("ii",$lugar,$tipo)) {
         die("Error en vinculación: (" . $statement->errno . ") " . $statement->error);
         return 0;
     }
@@ -158,6 +125,7 @@ function insertar_zombie($nombre,$id_estado) {
     desconectar_bd($conexion_bd);
       return 1;
   }
+
   function crear_select($id, $columna_descripcion, $tabla, $seleccion=0) {
     $conexion_bd = conectar_bd();  
       
@@ -178,23 +146,6 @@ function insertar_zombie($nombre,$id_estado) {
     return $resultado;
   }
 
-function contar_zombies($estado){
-        $conexion_bd = conectar_bd();
-        
-        if ($estado != "") {
-            $consulta = "select COUNT(Z.nombre) as zombies, T.fechaCreacion as fecha from zombie as Z , tiene as T where Z.id=T.id_zombie and T.id_estado =$estado;";
-        }else{
-            $consulta = 'select count(*) as zombies from zombie ';
-        }
-        
-        $resultados = $conexion_bd->query($consulta);
-       
-       while($row = mysqli_fetch_array( $resultados, MYSQLI_BOTH) ){
-           $resultado = $row['zombies'];
-       } 
 
-        desconectar_bd($conexion_bd);
-        return $resultado;
-    }
 
 ?>
