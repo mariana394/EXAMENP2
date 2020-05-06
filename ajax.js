@@ -2,7 +2,7 @@
 function buscar() {
     //$.post manda la petición asíncrona por el método post. También existe $.get
     $.post("controlador_buscar.php", {
-        estado: $("#estado").val()
+        Lugar: $("#Lugar").val()
     }).done(function (data) {
         $("#resultados_consulta").html(data);
     });

@@ -21,14 +21,14 @@
         
         $resultados = $conexion_bd->query($consulta);
         while ($row = mysqli_fetch_array($resultados, MYSQLI_BOTH)) {
-          $resultado .= ''.$row ['nombreT'] .'('.$row['fecha'] .')<br>' ;
+          $resultado .= ''.$row ['nombreT'] .'('.$row['fecha'] .' )  <br>' ;
         }
       
        // echo $consulta;
         return $resultado;
     }
 
-   function consultar_incidentes($tipo=""){
+   function consultar_incidentes($lugar=""){
         $conexion_bd = conectar_bd();
        
        $resultado=
@@ -37,16 +37,16 @@
                 <tr>
                     <th>Lugar</th>
                     <th>Tipo</th>
-                    <th>Fecha</th>
+                 
                 </tr>
             </thead>
             <tbody>";
        
            $consulta =  'SELECT DISTINCT L.id as idL,L.nombre as nombreL FROM Lugar as L ,Lugar_Tipo as Lt, Tipo as T WHERE L.id=Lt.id_Lugar and T.id = Lt.id_Tipo' ;
        
-       /* if ($tipo != "") {
-            $consulta .= " AND T.id_estado=".$tipo;
-        }*/
+       if ($lugar != "") {
+            $consulta .= " AND Lt.id_Lugar=".$lugar;
+        }
        $consulta .= ' order by Lt.fechaCreacion';
        
        $resultados = $conexion_bd->query($consulta);
@@ -55,7 +55,8 @@
            $resultado .= '<tr>';
            $resultado .= '<td>'.$row['nombreL'].'</td>';
            $resultado .= consultar_tipos($row['idL']);
-           $resultado .= '<a class="waves-effect waves-light btn" href="regitrarTipoI.php?id='.$row['idL'].' " ><i class="material-icons  left">add</i>Registrar estado</a>';
+
+           $resultado .= '<a class="waves-effect waves-light btn" href="regitrarTipoI.php?id='.$row['idL'].' " ><i class="material-icons  left">add</i>Registrar tipo Incidente</a>';
 
            $resultado .=' </td>
 
