@@ -162,12 +162,13 @@ ALTER TABLE `Lugar_Tipo`
   ADD CONSTRAINT `Lugar_Tipo_ibfk_2` FOREIGN KEY (`id_Tipo`) REFERENCES `Tipo` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
+
 DELIMITER //
 CREATE PROCEDURE agregaEstado(
-  Pid_Lugar NUMERIC(20),
-    Pid_Tipo NUMERIC(20))
+  Pid_lugar NUMERIC(20),
+    Pid_tipo NUMERIC(20))
     BEGIN 
-     INSERT INTO Lugar_Tipo (id_Lugar,id_Tipo) VALUES (Pid_Lugar,Pid_Tipo);
+     INSERT INTO Lugar_Tipo (id_lugar,id_tipo) VALUES (Pid_lugar,Pid_tipo);
     END;
 //
 

@@ -15,6 +15,7 @@
 
  function consultar_tipos($idLugar=''){
         $conexion_bd = conectar_bd();
+        $dml = 'CALL agregaEstado  (?,?)';
         $resultado = '<td>';
         $consulta = 'SELECT T.nombre as nombreT, Lt.fechaCreacion as fecha FROM Tipo as T , Lugar_Tipo as Lt WHERE Lt.id_Tipo =T.id and Lt.id_Lugar ='.$idLugar .'';
        
