@@ -1,6 +1,6 @@
 <?php
  function conectar_bd() {
-      $conexion_bd = mysqli_connect("localhost","root","","EXP2");
+      $conexion_bd = mysqli_connect("mysql1008.mochahost.com","dawbdorg_1704671","1704671","dawbdorg_A01704671");
       if ($conexion_bd == NULL) {
           die("No se pudo conectar con la base de datos");
       }

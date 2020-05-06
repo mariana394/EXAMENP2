@@ -10,10 +10,10 @@
   
       if($_POST["Lugar"] && $_POST["Tipo"]){
       	insertar_incidente($lugar,$tipo);
-          $_SESSION["mensaje"] = "Se registró el usuario";
+          $_SESSION["mensaje"] = "Se registró el incidente";
       }
        else {
-          $_SESSION["warning"] = "Ocurrió un error al registrar el usuario";
+          $_SESSION["warning"] = "Ocurrió un error al registrar el incidente";
       }
   
 //echo "hola";
