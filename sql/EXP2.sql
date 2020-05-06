@@ -164,7 +164,7 @@ COMMIT;
 
 
 DELIMITER //
-CREATE PROCEDURE agregaEstado(
+CREATE PROCEDURE agregaTipo(
   Pid_lugar NUMERIC(20),
     Pid_tipo NUMERIC(20))
     BEGIN 
