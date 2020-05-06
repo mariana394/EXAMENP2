@@ -16,7 +16,7 @@
  function consultar_tipos($idLugar=''){
         $conexion_bd = conectar_bd();
         $resultado = '<td>';
-        $consulta = 'SELECT T.nombre as nombreT, Lt.fechaCreacion as fecha FROM Tipo as T , Lugar_Tipo as Lt WHERE Lt.id_lugar =T.id and Lt.id_tipo ='.$idLugar .'';
+        $consulta = 'SELECT T.nombre as nombreT, Lt.fechaCreacion as fecha FROM Tipo as T , Lugar_Tipo as Lt WHERE Lt.id_Tipo =T.id and Lt.id_Lugar ='.$idLugar .'';
        
         
         $resultados = $conexion_bd->query($consulta);
@@ -55,7 +55,7 @@
            $resultado .= '<tr>';
            $resultado .= '<td>'.$row['nombreL'].'</td>';
            $resultado .= consultar_tipos($row['idL']);
-           $resultado .= '<a class="waves-effect waves-light btn" href="form_RegistrarEstado.php?id='.$row['idL'].' " ><i class="material-icons  left">add</i>Registrar estado</a>';
+           $resultado .= '<a class="waves-effect waves-light btn" href="regitrarTipoI.php?id='.$row['idL'].' " ><i class="material-icons  left">add</i>Registrar estado</a>';
 
            $resultado .=' </td>
 
